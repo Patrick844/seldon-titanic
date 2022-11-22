@@ -1,0 +1,51 @@
+---
+apiVersion: machinelearning.seldon.io/v1alpha2
+kind: SeldonDeployment
+metadata:
+  labels:
+    app: seldon
+  name: titanic-classifier
+spec:
+  annotations:
+    project_name: titanic classifier
+    deployment_version: v1
+  name: titanic-classifier
+  predictors:
+  - componentSpecs:
+    - spec:
+        containers:
+        - image: seldonio/titanic:1.4
+          imagePullPolicy: IfNotPresent
+          name: classifier
+          env:
+          - name: MODEL_METADATA
+            value: |
+              ---
+              name: titanic-logistic
+              versions: [ 0.1 ]
+              platform: seldon
+              inputs:
+              - messagetype: tensor
+                schema:
+                  names: ['pclass', 'sex', 'age', 'sibSp', 'parch', 'fare', 'embarked']
+                  shape: [ 3 ]
+              outputs:
+              - messagetype: tensor
+                schema:
+                  names: [node-output]
+                  shape: [ 1 ]
+          resources:
+            requests:
+              memory: 1Mi
+          
+        terminationGracePeriodSeconds: 20
+    graph:
+      children: []
+      name: classifier
+      endpoint:
+        type: REST
+      type: MODEL
+    name: single-model
+    replicas: 1
+    annotations:
+      predictor_version: v1
