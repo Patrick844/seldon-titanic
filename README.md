@@ -9,7 +9,6 @@ https://www.kaggle.com/c/titanic
 <br>
 
 ## Folder Architecture
-<hr/>
 <ul>
     
 <li> <ins> <strong>data</strong> </ins> :  Data of the dataset </li>
