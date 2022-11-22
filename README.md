@@ -1,7 +1,6 @@
 # Seldon with titanic dataset 
 
 ## Dataset
-<hr/>
 
 
 https://www.kaggle.com/c/titanic
@@ -25,7 +24,6 @@ https://www.kaggle.com/c/titanic
 </br>
 
 ## Environment
-<hr>
 
 create your environment (I use conda): 
     <ul>
@@ -34,7 +32,6 @@ create your environment (I use conda):
     </ul>
 </br>
 ## Installation
-<hr>
 
 Seldon Installation and configuration (localy) : https://docs.seldon.io/projects/seldon-core/en/latest/install/kind.html
 
@@ -47,7 +44,6 @@ and then follow the steps in the documentation
 </br>
 
 ## Code setup and config
-<hr>
 <ol>
 <li> Build Docker Image with python3.8 seldon: <code> docker build . -f Dockerfile -t seldonio/seldon-core-titanic:1.4</code>
 <li> Use s2i to build docker image with required files and config required by seldon: <code> s2i build . seldonio/seldon-core-titanic:0.4  seldonio/titanic:1.4 </code>
