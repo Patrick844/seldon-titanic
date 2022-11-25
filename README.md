@@ -30,25 +30,49 @@ create your environment (I use conda):
         <li> <code> pip install -r seldon/requirement.txt</code></li>
     </ul>
 </br>
+
 ## Installation
 
 Seldon Installation and configuration (localy) : https://docs.seldon.io/projects/seldon-core/en/latest/install/kind.html
 
-<ins> NB: </ins> Seldon works well with kubernetes 1.24 to create kind cluster use this command 
+<ins> NB: </ins> 
+
+<ul> 
+<li>Seldon works well with kubernetes 1.24 to create kind cluster use this command 
 <code>  
 kind create cluster --name seldon --image kindest/node:v1.24.7@sha256:577c630ce8e509131eab1aea12c022190978dd2f745aac5eb1fe65c0807eb315
 </code>
-and then follow the steps in the documentation
+and then follow the steps in the documentation</li>
+
+<li> Add the Seldon operator <code> helm install seldon-core seldon-core-operator --set istio.enabled=true --repo https://storage.googleapis.com/seldon-charts --set usageMetrics.enabled=true </code>
+</li>
+</ul>
 
 </br>
 
 ## Code setup and config
 <ol>
-<li> Build Docker Image with python3.8 seldon: <code> docker build . -f Dockerfile -t seldonio/seldon-core-titanic:1.4</code>
+<li> Build Docker Image with python3.8 seldon: <code> docker build . -f Dockerfile -t seldonio/seldon-core-titanic:1.4</code> in titanic wrapper folder
 <li> Use s2i to build docker image with required files and config required by seldon: <code> s2i build . seldonio/seldon-core-titanic:0.4  seldonio/titanic:1.4 </code>
 <li> Load image into kind: <code> kind load docker-image seldonio/titanic:1.4 --name seldon </code></li>
-<li> Apply Seldon Deployment yml file: <code>kubectl apply -f sdpl.yml</code></li>
+<li> Apply Seldon Deployment yml file: <code>kubectl apply -f sdpl.yml</code></li> in Seldon_Deployment folder
 <li> Check if pod running: <code> kubectl get pods</code></li>
 <li> Port Forwarding: <code> kubectl port-forward -n istio-system svc/istio-ingressgateway 8081:80 </code>
 <li> Run seldon notebook
 </ol>
+
+## Prometheus
+
+<ol>
+   
+ <li> Install Prometheus on Kubernetes cluster <code>kubectl create namespace seldon-monitoring
+
+helm upgrade --install seldon-monitoring kube-prometheus \
+    --version 6.9.5 \
+    --set fullnameOverride=seldon-monitoring \
+    --namespace seldon-monitoring \
+    --repo https://charts.bitnami.com/bitnami </code></li>
+
+<li>  Apply prometheus and graphana yaml in prometheus_grafana folder <code> kubectl apply -f prometheus.yml </code> and <code> grafana.yml </code> </li>
+<li> port forward grafana and prometheus for <strong> grafana use admin, admin as password </stron>
+<li> Grafana UI: connect to a data source, chose prometheus and as <strong>host the cluster IP of prometheus port 9090</strong>

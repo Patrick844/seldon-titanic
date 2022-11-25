@@ -14,10 +14,12 @@ spec:
   - componentSpecs:
     - spec:
         containers:
-        - image: seldonio/titanic:1.4
+        - image: seldonio/titanic:1.8.3
           imagePullPolicy: IfNotPresent
           name: classifier
           env:
+          - name: SELDON_LOG_LEVEL
+            value: INFO
           - name: MODEL_METADATA
             value: |
               ---
