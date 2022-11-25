@@ -61,7 +61,7 @@ and then follow the steps in the documentation</li>
 <li> Run seldon notebook
 </ol>
 
-## Prometheus
+## Prometheus and Grafana
 
 <ol>
    
