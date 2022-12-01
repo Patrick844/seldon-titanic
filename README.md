@@ -74,5 +74,7 @@ helm upgrade --install seldon-monitoring kube-prometheus \
     --repo https://charts.bitnami.com/bitnami </code></li>
 
 <li>  Apply prometheus and graphana yaml in prometheus_grafana folder <code> kubectl apply -f prometheus.yml </code> and <code> grafana.yml </code> </li>
-<li> port forward grafana and prometheus for <strong> grafana use admin, admin as password </stron>
+<li><code>kubectl port-forward -n seldon-monitoring svc/seldon-monitoring-prometheus 9090:9090</code></li>
+<li><code>kubectl port-forward service/grafana 3000:3000</code></li>
+<li> port forward grafana and prometheus for <strong> grafana use admin, admin as password </strong>
 <li> Grafana UI: connect to a data source, chose prometheus and as <strong>host the cluster IP of prometheus port 9090</strong>

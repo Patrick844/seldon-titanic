@@ -5,55 +5,15 @@ metadata:
   labels:
     app: seldon
   name: ab-test
+  namespace: ns-prod
 spec:
   annotations:
     project_name: titanic classifier
     deployment_version: v1
-  name: ab-test
+  name: titanic-classifier
   predictors:
-  - name: single-model-clf
-    traffic: 50
-    componentSpecs:
-    - spec:
-        containers:
-        - image: seldonio/titanic:1.8.5
-          imagePullPolicy: IfNotPresent
-          name: classifier
-          env:
-          - name: SELDON_LOG_LEVEL
-            value: INFO
-          - name: MODEL_METADATA
-            value: |
-              ---
-              name: titanic-logistic
-              versions: [ 0.1 ]
-              platform: seldon
-              inputs:
-              - messagetype: tensor
-                schema:
-                  names: ['pclass', 'sex', 'age', 'sibSp', 'parch', 'fare', 'embarked']
-                  shape: [ 3 ]
-              outputs:
-              - messagetype: tensor
-                schema:
-                  names: [node-output]
-                  shape: [ 1 ]
-          resources:
-            requests:
-              memory: 1Mi
-          
-        terminationGracePeriodSeconds: 20
-    graph:
-      children: []
-      name: classifier
-      endpoint:
-        type: REST
-      type: MODEL
-    replicas: 1
-    annotations:
-      predictor_version: v1
   - name: single-model-svc
-    traffic: 50
+    traffic: 100
     componentSpecs:
     - spec:
         containers:

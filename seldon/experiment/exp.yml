@@ -1,0 +1,57 @@
+apiVersion: iter8.tools/v2alpha2
+kind: Experiment
+metadata:
+  name: quickstart-exp
+spec:
+  target: ab-test
+  strategy:
+    testingPattern: A/B
+    deploymentPattern: Progressive
+    actions:
+      # when the experiment completes, promote the winning version using kubectl apply
+      finish:
+      - task: common/exec
+        with:
+          cmd: /bin/bash
+          args: [ "-c", "kubectl apply -f {{ .promote }}" ]
+  criteria:
+    requestCount: iter8-seldon/request-count
+    objectives:
+    - metric: iter8-seldon/execution-time
+      upperLimit: "0.1"
+  versionInfo:
+    # information about model versions used in this experiment
+    baseline:
+      name: titanic-v1
+      weightObjRef:
+        apiVersion: machinelearning.seldon.io/v1
+        kind: SeldonDeployment
+        name: ab-test
+        namespace: ns-prod
+        fieldPath: .spec.predictors[0].traffic
+      variables:
+      - name: ns
+        value: ns-prod
+      - name: sid
+        value: ab-test
+      - name: predictor
+        value: single-model-clf
+      - name: promote
+        value: promote_1.yml
+    candidates:
+    - name: titanic-v2
+      weightObjRef:
+        apiVersion: machinelearning.seldon.io/v1
+        kind: SeldonDeployment
+        name: ab-test
+        namespace: ns-prod
+        fieldPath: .spec.predictors[1].traffic
+      variables:
+      - name: ns
+        value: ns-prod
+      - name: sid
+        value: ab-test
+      - name: predictor
+        value: single-model-svc
+      - name: promote
+        value: promote_2.yml

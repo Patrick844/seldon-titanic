@@ -1,0 +1,17 @@
+apiVersion: iter8.tools/v2alpha2
+kind: Metric
+metadata:
+  name: execution-time
+  namespace: iter8-seldon
+spec:
+  description: execution runtime
+  jqExpression: .data.result[0].value[1] | tonumber
+  params:
+  - name: query
+    value: |
+      sum(gauge_runtime{service='feedback',seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s]) or on() vector(0)
+  provider: prometheus
+  sampleSize: iter8-seldon/request-count
+  type: Gauge
+  units: milliseconds
+  urlTemplate: http://10.96.231.103:9090

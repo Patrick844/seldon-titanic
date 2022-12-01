@@ -26,7 +26,7 @@ class Titanic(object):
         self.scaler = joblib.load("scaler")
         log.info(f'Initializing scaler')
 
-        self.clf = joblib.load("clf")
+        self.clf = joblib.load("svc")
         log.info(f'Initializing Logistic Model')
     
     def predict(self, X, features_name):
@@ -104,6 +104,7 @@ class Titanic(object):
             # a counter which will increase by the given value
             {"type": "COUNTER", "key": name , "value": 1},
             {"type":"GAUGE","key":"gauge_runtime","value":et - st},
+            
         ]
 
         
